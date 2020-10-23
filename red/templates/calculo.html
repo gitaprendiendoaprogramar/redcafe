@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container-fluid">
+    <div class="card">
+        <h5 class="card-header">Cálculo del rendimiento y precio café</h5>
+        <div class="card-body">
+            <form id="form_nuevo">
+                <div class="form-group">
+                    <label>Ingresa la masa de muestra de café (M) (250 o 300 gr)</label>
+                    <input type="number" id="masaCafe" class="form-control">
+
+                </div>
+                <div class="form-group">
+                    <label>Ingresa la masa de la trilla (T)</label>
+                    <input type="number" id="masaTrilla" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Ingresa la masa de pasilla bajo de la malla 13 (P)</label>
+                    <input type="number" id="masaPasilla" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Ingresa la masa de los defectos hallados (D)</label>
+                    <input type="number" id="masaDefectos" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Ingresa el precio base (PB)</label>
+                    <input type="number" id="precioBase" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Ingresa la cantidad de cantidad de cargas de café</label>
+                    <input type="number" id="cantidadCafe" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label>Factor de rendimiento</label>
+                    <input type="number" id="factorRendimiento" class="form-control" readonly> 
+                </div>
+        
+        </div>
+        <div class="card-footer">
+            <a onclick="getFactorRendimiento()" class="btn btn-primary text-light">Factor de rendimiento</a>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+
+    function getNuevopeso() {
+         var masaCafe=$('#masaCafe').val();
+         var masaTrilla=$('#masaTrilla').val();
+         var masaDefectos=$('#masaDefectos').val();
+         var masaPasilla=$('#masaPasilla').val();
+         var nuevoPeso = Number(masaCafe) - Number(masaTrilla) -Number(masaDefectos) - Number(masaPasilla);
+         $("#nuevoPeso").val(nuevoPeso); 
+    return nuevoPeso;
+    }
+
+    function getPorcentajeExcelso() {
+         var nuevoPeso=getNuevopeso();
+         var masaCafe=$('#masaCafe').val();
+         var porcentajeExcelso =Number (nuevoPeso) / Number(masaCafe);
+         $("#porcentajeExcelso").val(porcentajeExcelso);
+    return porcentajeExcelso;
+    }
+
+    function getFactorRendimiento() {
+        var cafeExcelso = getPorcentajeExcelso();
+        var valorFijo=70;
+        var factorRendimiento = Number(valorFijo) / Number(cafeExcelso);
+        $("#factorRendimiento").val(factorRendimiento);
+    return factorRendimiento;
+    }
+
+
+    function getPreLiquidacion(){
+        var factorRendimiento = getFactorRendimiento()
+        var precioBase=$('#precioBase').val();
+
+
+        if (factorRendimiento > 94){
+             var preLiquidacion = Number(precioBase) -Number(precioBase) * (Number(factorRendimiento) - 94) / 100;
+             }
+        
+        else {
+             preLiquidacion = Number(precioBase) - Number(precioBase) * (94 - Number(factorRendimiento)) / 100;
+        }
+        $ ("#preLiquidacion").val()
+    }
+
+    function getLiquidacionFinal(){
+         preLiquidacion = getPreLiquidacion()
+         var cantidadCafe=$('#cantidadCafe').val();
+         liquidacionFinal = Number(preLiquidacion) * Number(cantidadCafe)
+         $(liquidacionFinal).val()
+
+    }
+    
+
+
+</script>
+
+{% endblock %}

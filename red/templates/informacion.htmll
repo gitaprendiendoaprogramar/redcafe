@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container-fluid">
+    <h1 class="mt-4 mb-4" >Bienvenidos a la RED DEL CAFÉ</h1>
+        <p class="lead">Red del café es un [aplicativo web, programa, app] orientado a todos los actores de la primera etapa de la cadena productiva y comercial del café, es decir, desde campesinos dedicados su cultivo, pasando por pequeño y medianos comerciantes e intermediaros, hasta trilladoras encargadas de la compra masiva y transformación del producto. 
+
+            En red del café podrás hallar herramientas para realizar el análisis físico de tu café de forma fácil y rápida, interactuar con otros actores de la cadena productiva y comercial y participar de espacios informativos y de [debate, retroalimentación] con otros usuarios del programa.</p>
+        
+</div>
+{% endblock %}

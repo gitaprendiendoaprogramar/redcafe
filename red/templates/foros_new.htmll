@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Todo del Café{% endblock %}
+{% block body %}
+<div class="container">
+  <div class="col-md-2"></div>
+  <div class="col-md-6">
+  {% if accion=='add' %}
+    <h3>Nuevo Foro</h3>  
+  {% else %}
+    <h3>Edicion de Foro</h3> 
+  {% endif %}
+    {% for field, errors in form.errors.items() %}
+      <div class="alert alert-danger">
+        {{ form[field].label }}: {{ ', '.join(errors) }}
+      </div>
+    {% endfor %}
+      <form class="form-horizontal" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          {{ form.csrf_token }}
+          {{form.TituloId.label() }}{{form.TituloId(class="form-control")}}<br/>
+        </div>
+        <div class="form-group">
+          {{form.descripcion.label() }}<br/>{{form.descripcion(rows="10",cols="55",class="form-control")}}<br/>
+        </div>
+        {{form.submit(class="btn btn-lg btn-primary btn-block")}}
+    </form>
+    <br/>
+  </div>
+</div>
+{% endblock %}

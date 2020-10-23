@@ -1,0 +1,167 @@
+{% extends "base.html" %} {% block body %}
+<div class="container-fluid">
+    <div class="card">
+        <h5 class="card-header">Trilladoras</h5>
+        <div class="card-body">
+            <table class="table" id="tabla_trilladoras">
+                <thead>
+                    <th>Nombre</th>
+                    <th>Ubicación</th>
+                    <th>Teléfono</th>
+                    <th>Horario</th>
+
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <button type="button" class="btn btn-success" onclick="limpiar()" data-toggle="modal" data-target="#nueva_trilladora">Agregar
+        Trilladora</button>
+        </div>
+    </div>
+</div>
+<div class="modal" id="nueva_trilladora" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nueva Trilladora</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form id="form_nuevo">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" id="nombre" class="form-control">
+
+                    </div>
+                    <div class="form-group">
+                        <label>Ubicación</label>
+                        <input type="text" id="ubicacion" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="number" id="telefono" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Horario de atención</label>
+                        <input type="text" id="horario" class="form-control">
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button onclick="nueva()" class="btn btn-success">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //al estar el documento ready ejecuto se ejecuta la función
+    document.addEventListener('DOMContentLoaded', consultar());
+
+    function consultar() {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+        };
+
+        fetch("/trilladoras/consultar", requestOptions)
+            .then(res => res.json())
+            .then(result => {
+                result.forEach(element => {
+                    var str = "<tr><td>" + element.nombre + "</td><td>" + element.ubicacion + "</td><td>" + element.telefono + "</td><td>" + element.horario + "</td></tr>";
+                    $("#tabla_trilladoras").find("tbody").append(str)
+                });
+            })
+            .catch(error => console.log('error', error));
+    }
+
+    function nueva() {
+        var nombre = $("#nombre").val();
+        var ubicacion = $("#ubicacion").val();
+        var telefono = $("#telefono").val();
+        var horario = $("#horario").val();
+        var cont_err = 0;
+        if (nombre == "") {
+            error("Debe escribir un nombre")
+            cont_err++
+        }
+        if (ubicacion == "") {
+            error("Debe escribir una ubicación")
+            cont_err++
+        }
+        if (telefono == "" || telefono.length < 7 || telefono.length > 10) {
+            error("Debe escribir un número de teléfono correcto")
+            cont_err++
+        }
+        if (horario == "") {
+            error("Debe escribir un horario")
+            cont_err++
+        }
+        if (cont_err == 0) {
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({
+                "nombre": nombre,
+                "ubicacion": ubicacion,
+                "telefono": telefono,
+                "horario": horario
+            });
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("/trilladoras/nuevo", requestOptions)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.res == "ok") {
+                        $(".alerta").remove();
+                        ok("Se ha agregado correctamente", "success");
+                        $("#tabla_trilladoras tbody").find("tr").remove();
+                        $('#nueva_trilladora').modal('hide')
+                        consultar();
+
+
+                    } else {
+                        console.log(result.res)
+                        $(".alerta").remove();
+                        ok("Error", "danger")
+                    }
+                })
+                .catch(error => console.log('error', error));
+        }
+    }
+
+    function error(desc) {
+        var mensaje = '<div class="alert alert-danger alerta-err" role="alert">' + desc + '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+        $("#form_nuevo").append(mensaje);
+    }
+
+    function ok(desc, tipo) {
+        var mensaje = '<div class="alert alert-' + tipo + ' alerta" role="alert">' + desc + '  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
+        $("#tabla_trilladoras").after(mensaje);
+    }
+
+    function limpiar() {
+        $(".alerta-err").remove();
+        $("#nombre").val("");
+        $("#ubicacion").val("");
+        $("#telefono").val("");
+        $("#horario").val("");
+    }
+</script>
+
+{% endblock %}

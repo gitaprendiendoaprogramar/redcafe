@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Todo del Café{% endblock %}
+{% block contenido %}
+<div class="container">
+  <div class="row">
+    <h3>Categorias</h3>  
+    <br/>
+    {% if current_user.is_admin %}
+      <a class="btn btn-primary" href="{{url_for('categorias_new')}}" role="button">Nueva categoria</a>
+    {% endif %}
+  </div>  
+    <br/><br/>
+  <div class="row">
+    <div class="list-group">
+      <table class="table table-bordered">
+        <tr>
+          <th>Nombre</th>
+        </tr>
+        {% for cat in categorias %}
+          <tr>
+            <td>{{cat.nombre}}</td>
+            {% if current_user.is_authenticated and current_user.is_admin() %}
+              <td><a href="{{url_for('categorias_edit',id=cat.id)}}">Modificar</a></td>
+              <td><a href="{{url_for('categorias_delete',id=cat.id)}}">Borrar</a></td>
+            {% endif %}   
+          </tr>
+        {% endfor %}
+      </table>
+    </div>  
+  </div>
+</div>
+{% endblock %}
