@@ -1,0 +1,55 @@
+{% extends "base.html" %} {% block title %}Todo del Café{% endblock %} {% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <h4>Categorias...</h4>
+            <div class="list-group">
+                {% for tit in titulos %} {% if titulo.nombre==tit.nombre%}
+                <a class="list-group-item active" href="{{url_for("foros",id=tit.id)}}">{{tit.nombre}}</a> {% else %}
+                <a class="list-group-item" href="{{url_for("foros",id=tit.id)}}">{{tit.nombre}}</a> {% endif%} {% endfor %}
+                <br/> {% if current_user.is_authenticated %}
+                <a class="btn btn-primary" href="{{url_for('foros_new')}}" role="button">Nuevo Foro</a> {% endif %}
+            </div>
+            <br/>
+        </div>
+        <div class="col-md-10">
+            <h4>Nuestros Foros ({{titulo.nombre}})</h4>
+            <div class="panel panel-default">
+                <table class="table">
+                    <thead>
+                        <th>Descripción</th>
+                        <th>Fecha</th>
+                        <th>Usuario</th>
+                        {% if current_user.is_authenticated%}
+                            <th>Edita</th>
+                            <th>Borrar</th>
+                        {% endif %}
+                    </thead>
+                    <tbody>
+                        {% for frs in foros %}
+                        <tr>
+                            <td>{{frs.descripcion}}</td>
+                            <td>{{frs.created_at.strftime("%b %d %Y %H:%M:%S")}}</td>
+                            <td>{{frs.usuario.username}}</td>
+                            {% if current_user.is_authenticated %}
+                                {% if current_user.is_admin() %}
+                                    <td><a href="{{url_for('foros_edit',id=frs.id)}}"><i class="fas fa-pen-square"></i></a></td>
+                                    <td><a href="{{url_for('foros_delete',id=frs.id)}}"><i class="far fa-trash-alt"></i></a></td>
+                                {% else %}
+                                    {% if current_user.id == frs.UsuarioId %}
+                                        <td><a href="{{url_for('foros_edit',id=frs.id)}}"><i class="fas fa-pen-square"></i></a></td>
+                                        <td><a href="{{url_for('foros_delete',id=frs.id)}}"><i class="far fa-trash-alt"></i></a></td>
+                                    {% else %}
+                                        <td><a href="#"><i class="fas fa-pen-square"></i></a></td>
+                                        <td><a href="#"><i class="far fa-trash-alt"></i></a></td>                    
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
