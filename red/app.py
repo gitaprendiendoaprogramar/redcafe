@@ -100,8 +100,8 @@ def categorias_delete(id):
 def foros_new():
     from red.models import Foros, Titulos
      #Control de permisos
-    if not current_user.is_admin():
-        abort(404)
+    #if not current_user.is_admin():
+    #    abort(404)
     form = FormForo()
     titulos = [(c.id, c.nombre) for c in Titulos.query.all()[1:]]
     form.TituloId.choices = titulos
@@ -121,8 +121,8 @@ def foros_new():
 def foros_edit(id):
     from red.models import Foros, Titulos
      #Control de permisos no
-    if not current_user.is_admin():
-        abort(404)
+    #if not current_user.is_admin():
+    #    abort(404)
     frs = Foros.query.get(id)
     if frs is None:
        abort(404)
@@ -140,8 +140,8 @@ def foros_edit(id):
 def foros_delete(id):
     from red.models import Foros
      #Control de permisos
-    if not current_user.is_admin():
-        abort(404)
+    #if not current_user.is_admin():
+    #   abort(404)
     frs = Foros.query.get(id)
     if frs is None:
         abort(404)
@@ -258,10 +258,6 @@ def consultar_trilladoras():
         datos.append(dato)
     res = json_util.dumps(datos)
     return Response(res, mimetype="application/json")
-
-#@app.route("/informacion")
-#def informacion():
-#    return render_template("informacion.html")
 
 @app.route("/trilladoras")
 def Trilladoras():
