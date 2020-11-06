@@ -186,8 +186,8 @@ def blogs_view(id):
 def blogs_new():
     from red.models import Blogs, Usuarios
     # Control de permisos
-    if not current_user.is_admin():
-        abort(404)
+    #if not current_user.is_admin(): acac modifico
+    #    abort(404)
     form = FormBlog()
     form.UsuarioId.data = current_user.id
     form.created_at.data = datetime.now()
@@ -205,8 +205,8 @@ def blogs_new():
 def blogs_edit(id):
     from red.models import Blogs, Usuarios
     # Control de permisos
-    if not current_user.is_admin():
-        abort(404)
+    #if not current_user.is_admin(): modifico permisos
+    #    abort(404)
     frs = Blogs.query.get(id)
     if frs is None:
         abort(404)
@@ -222,8 +222,8 @@ def blogs_edit(id):
 def blogs_delete(id):
     from red.models import Blogs, Usuarios
     # Control de permisos
-    if not current_user.is_admin():
-        abort(404)
+    #if not current_user.is_admin(): modifico
+    #    abort(404)
     frs = Blogs.query.get(id)
     if frs is None:
         abort(404)

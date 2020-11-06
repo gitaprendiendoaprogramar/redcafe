@@ -4,7 +4,7 @@
         <div class="col-md-12">
             <h4>Infórmate</h4>
              <br/> 
-             {% if current_user.is_authenticated and current_user.is_admin() %}
+             {% if current_user.is_authenticated %}
                <a class="btn btn-primary" href="{{url_for('blogs_new')}}" role="button">Nuevo Blog</a> 
              {% endif %}
              <div class="container-fluid">
@@ -22,7 +22,7 @@
                         <th>Descripción</th>
                         <th>Fecha</th>
                         <th>Usuario</th>
-                        {% if current_user.is_authenticated and current_user.is_admin() %}
+                        {% if current_user.is_authenticated %}
                         <th>Edita</th>
                         <th>Borrar</th>
                         {% endif %}
@@ -34,15 +34,63 @@
                             <td>{{frs.descripcion[0:100]}}</td>
                             <td>{{frs.created_at.strftime("%b %d %Y %H:%M:%S")}}</td>
                             <td>{{frs.usuario.username}}</td>
-                            {% if current_user.is_authenticated and current_user.is_admin() %}
-                            <td><a href="{{url_for('blogs_edit',id=frs.id)}}"><i class="fas fa-pen-square"></i></a></td>
-                            <td><a href="{{url_for('blogs_delete',id=frs.id)}}"><i class="far fa-trash-alt"></i></a></td>
+                            {% if current_user.is_authenticated %}
+                                {% if current_user.is_admin() %}
+                                    <td><a href="{{url_for('blogs_edit',id=frs.id)}}"><i class="fas fa-pen-square"></i></a></td>
+                                    <td><a href="{{url_for('blogs_delete',id=frs.id)}}"><i class="far fa-trash-alt"></i></a></td>
+                                {% else %}
+                                    {% if current_user.id == frs.UsuarioId %}
+                                        <td><a href="{{url_for('blogs_edit',id=frs.id)}}"><i class="fas fa-pen-square"></i></a></td>
+                                        <td><a href="{{url_for('blogs_delete',id=frs.id)}}"><i class="far fa-trash-alt"></i></a></td>
+                                    {% else %}
+                                        <td><a href="#"><i class="fas fa-pen-square"></i></a></td>
+                                        <td><a href="#"><i class="far fa-trash-alt"></i></a></td>                    
+                                    {% endif %}
+                                {% endif %}
                             {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            <div class="container-fluid">
+    <div class="card">
+        <h5 class="card-header">Comentarios</h5>
+        <div class="card-body">
+            <table class="table" id="tabla_trilladoras">
+                <thead>
+                    <th>comentario</th>
+
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+           <a class="btn btn-primary" href="{{url_for('blogs_new')}}" role="button">Nuevo comentario</a>
         </div>
     </div>
-    {% endblock %}
+</div>
+<div class="modal" id="nueva_trilladora" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nueva Comentario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form id="form_nuevo">
+                    <div class="form-group">
+                        <label>Comentario</label>
+                        <input type="text" id="nombre" class="form-control">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+     </div>
+    </div>
+{% endblock %}
