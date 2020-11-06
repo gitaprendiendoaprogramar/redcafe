@@ -35,6 +35,15 @@
                 </div>
                 Creado el :{{blog.created_at}}<br/>
                 Publicado por : {{blog.usuario.username}}<br/>
+                {% if current_user.is_authenticated %}
+                  <div class="form-group">
+                    <br/>
+                    <br/>
+                    {{form.comentario(rows="5",cols="55",class="form-control")}}
+                    <br/>
+                  </div>
+                  {{form.comentar(class="btn btn-lg btn-primary")}}
+                {% endif %} 
             {% endif %}
     </form>
     <br/>

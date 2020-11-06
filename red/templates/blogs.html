@@ -1,96 +1,56 @@
 {% extends "base.html" %} {% block title %}Todo del Café{% endblock %} {% block body %}
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h4>Infórmate</h4>
-             <br/> 
-             {% if current_user.is_authenticated %}
-               <a class="btn btn-primary" href="{{url_for('blogs_new')}}" role="button">Nuevo Blog</a> 
-             {% endif %}
-             <div class="container-fluid">
-             <h1 class="mt-4 mb-4" >Bienvenidos a la RED DEL CAFÉ</h1>
-             <p class="lead">Red del café es un [aplicativo web, programa, app] orientado a todos los actores de la primera etapa de la cadena productiva y comercial del café, es decir, desde campesinos dedicados su cultivo, pasando por pequeño y medianos comerciantes e intermediaros, hasta trilladoras encargadas de la compra masiva y transformación del producto. 
-
-            En red del café podrás hallar herramientas para realizar el análisis físico de tu café de forma fácil y rápida, interactuar con otros actores de la cadena productiva y comercial y participar de espacios informativos y de [debate, retroalimentación] con otros usuarios del programa.</p>
- 
-            </div>
-            <h4>Nuestro contenido</h4>
-            <div class="panel panel-default">
-                <table class="table">
-                    <thead>
-                        <th>Titulo</th>
-                        <th>Descripción</th>
-                        <th>Fecha</th>
-                        <th>Usuario</th>
-                        {% if current_user.is_authenticated %}
-                        <th>Edita</th>
-                        <th>Borrar</th>
-                        {% endif %}
-                    </thead>
-                    <tbody>
-                        {% for frs in blogs %}
-                        <tr>
-                            <td><a href="{{url_for('blogs_view',id=frs.id)}}">{{frs.titulo}}</a></td>
-                            <td>{{frs.descripcion[0:100]}}</td>
-                            <td>{{frs.created_at.strftime("%b %d %Y %H:%M:%S")}}</td>
-                            <td>{{frs.usuario.username}}</td>
-                            {% if current_user.is_authenticated %}
-                                {% if current_user.is_admin() %}
-                                    <td><a href="{{url_for('blogs_edit',id=frs.id)}}"><i class="fas fa-pen-square"></i></a></td>
-                                    <td><a href="{{url_for('blogs_delete',id=frs.id)}}"><i class="far fa-trash-alt"></i></a></td>
-                                {% else %}
-                                    {% if current_user.id == frs.UsuarioId %}
-                                        <td><a href="{{url_for('blogs_edit',id=frs.id)}}"><i class="fas fa-pen-square"></i></a></td>
-                                        <td><a href="{{url_for('blogs_delete',id=frs.id)}}"><i class="far fa-trash-alt"></i></a></td>
-                                    {% else %}
-                                        <td><a href="#"><i class="fas fa-pen-square"></i></a></td>
-                                        <td><a href="#"><i class="far fa-trash-alt"></i></a></td>                    
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="container-fluid">
-    <div class="card">
-        <h5 class="card-header">Comentarios</h5>
-        <div class="card-body">
-            <table class="table" id="tabla_trilladoras">
-                <thead>
-                    <th>comentario</th>
-
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-        </div>
-        <div class="card-footer">
-           <a class="btn btn-primary" href="{{url_for('blogs_new')}}" role="button">Nuevo comentario</a>
-        </div>
-    </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h4>Infórmate</h4>  
+      <br/> 
+      {% if current_user.is_authenticated %}
+        <a class="btn btn-primary" href="{{url_for('blogs_new')}}" role="button">Nuevo Blog</a> 
+      {% endif %}
+      <div class="container-fluid">
+        <h1 class="mt-4 mb-4" >Bienvenidos a la RED DEL CAFÉ</h1>
+        <p class="lead">Red del café es un [aplicativo web, programa, app] orientado a todos los actores de la primera etapa de la cadena productiva y comercial del café, es decir, desde campesinos dedicados su cultivo, pasando por pequeño y medianos comerciantes e intermediaros, hasta trilladoras encargadas de la compra masiva y transformación del producto. 
+          En red del café podrás hallar herramientas para realizar el análisis físico de tu café de forma fácil y rápida, interactuar con otros actores de la cadena productiva y comercial y participar de espacios informativos y de [debate, retroalimentación] con otros usuarios del programa.
+        </p>
+      </div>
+      <h4>Nuestro contenido</h4>
+      <div class="panel panel-default">
+        <table class="table">
+          <thead>
+            <th>Titulo</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Usuario</th>
+            {% if current_user.is_authenticated %}
+              <th>Edita</th>
+              <th>Borrar</th>
+            {% endif %}
+          </thead>
+          <tbody>
+            {% for frs in blogs %}
+              <tr>
+                <td><a href="{{url_for('blogs_view',id=frs.id)}}">{{frs.titulo}}</a></td>
+                <td>{{frs.descripcion[0:100]}}</td>
+                <td>{{frs.created_at.strftime("%b %d %Y %H:%M:%S")}}</td>
+                <td>{{frs.usuario.username}}</td>
+                {% if current_user.is_authenticated %}
+                  {% if current_user.is_admin() %}
+                    <td><a href="{{url_for('blogs_edit',id=frs.id)}}"><i class="fas fa-pen-square"></i></a></td>
+                    <td><a href="{{url_for('blogs_delete',id=frs.id)}}"><i class="far fa-trash-alt"></i></a></td>
+                  {% else %}
+                    {% if current_user.id == frs.UsuarioId %}
+                      <td><a href="{{url_for('blogs_edit',id=frs.id)}}"><i class="fas fa-pen-square"></i></a></td>
+                      <td><a href="{{url_for('blogs_delete',id=frs.id)}}"><i class="far fa-trash-alt"></i></a></td>
+                    {% else %}
+                      <td><a href="#"><i class="fas fa-pen-square"></i></a></td>
+                      <td><a href="#"><i class="far fa-trash-alt"></i></a></td>                    
+                    {% endif %}
+                  {% endif %}
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 </div>
-<div class="modal" id="nueva_trilladora" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Nueva Comentario</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-            </div>
-            <div class="modal-body">
-                <form id="form_nuevo">
-                    <div class="form-group">
-                        <label>Comentario</label>
-                        <input type="text" id="nombre" class="form-control">
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-     </div>
-    </div>
 {% endblock %}

@@ -33,6 +33,8 @@ class FormBlog(FlaskForm):
     descripcion = TextAreaField("Descripción:")
     created_at = HiddenField()
     submit = SubmitField('Enviar')
+    comentario = TextAreaField("Comentario:", validators=[Required("Tienes que introducir el dato")])
+    comentar = SubmitField('Comentar')
       
 
 class FormSINO(FlaskForm):

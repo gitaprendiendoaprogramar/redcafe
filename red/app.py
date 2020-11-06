@@ -234,7 +234,21 @@ def blogs_delete(id):
             db.session.commit()
         return redirect(url_for("blogs"))
     return render_template("blogs_delete.html", form=form, frs=frs)
+## parte que voy a modifica ojo...
+@app.route('/blogs')
+@app.route('/blogs/<id>')
+def Blogs(id='0'):
+    from red.models import Blogs_Coments, Titulos
+    titulo = Titulos.query.get(id)
+    if id == '0':
+        blogs = Blogs.query.all()
+    else:
+        blogs = Blogs.query.filter_by(TitulosId=id)
+    titulos = Titulos.query.all()
+    print(blogs)
+    return render_template("blogs.html", foros=blogs, titulos=titulos, titulo=titulo)
 
+##########
 @app.route("/trilladoras/nuevo", methods=['POST'])
 def nueva_trilladora():
     from red.models import Trilladoras

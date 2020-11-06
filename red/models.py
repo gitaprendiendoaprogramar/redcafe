@@ -54,7 +54,21 @@ class Blogs(db.Model):
     
     def __repr__(self):
         return (u'<{self.__class__.__name__}: {self.id}>'.format(self=self))
+
+class Blogs_Coments(db.Model):
+    """Blogs de nuestra Sitio"""
+    __tablename__ = 'blogs_coments'
+    id = Column(Integer, primary_key=True)
+    BlogId = Column(Integer, ForeignKey('blogs.id'), nullable=False)
+    descripcion = Column(String(255))
+    created_at = db.Column(db.DateTime)
+    UsuarioId = Column(Integer, ForeignKey('usuarios.id'), nullable=False)
+    # busuario = relationship("Usuarios", backref="blogs")
+    blog = relationship("Blogs", backref="blogs")
     
+    def __repr__(self):
+        return (u'<{self.__class__.__name__}: {self.id}>'.format(self=self))
+
 class Usuarios(db.Model):
     """Usuarios"""
     __tablename__ = 'usuarios'
