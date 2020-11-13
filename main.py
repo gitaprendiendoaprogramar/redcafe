@@ -1,6 +1,6 @@
 from flask_script import Manager, Server
-from red import run
-from red.models import *
+from red import main
+from red.models import * # importa los modelos del archivo model de la carpeta red
 from getpass import getpass
 
 app = run.create_app()
@@ -12,7 +12,7 @@ def create_tables():
     db.create_all()
     categoria = Titulos(id=0, nombre="Todos")
     db.session.add(categoria)
-    db.session.commit()
+    db.session.commit() # guarda los datos a las tablas 
 
 
 @manager.command
