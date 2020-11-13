@@ -1,5 +1,5 @@
 from flask_script import Manager, Server
-from red import main
+from red import run
 from red.models import * # importa los modelos del archivo model de la carpeta red
 from getpass import getpass
 
@@ -48,4 +48,4 @@ manager.add_command("runserver", Server(
     host = '0.0.0.0') )
 
 if __name__ == '__main__':
-    manager.run()
+    manager.main()
