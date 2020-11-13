@@ -3,10 +3,10 @@
 {% block contenido %}
 <div class="container">
   <div class="row">
-    <h3>Categorias</h3>  
+    <h3>Categorías</h3>  
     <br/>
     {% if current_user.is_admin %}
-      <a class="btn btn-primary" href="{{url_for('categorias_new')}}" role="button">Nueva categoria</a>
+      <a class="btn btn-primary" href="{{url_for('categorias_new')}}" role="button">Nueva categoría</a>
     {% endif %}
   </div>  
     <br/><br/>

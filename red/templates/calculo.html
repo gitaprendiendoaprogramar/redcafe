@@ -6,43 +6,48 @@
         <div class="card-body">
             <form id="form_nuevo">
                 <div class="form-group">
-                    <label>Ingresa la masa de muestra de café (M) (250 o 300 gr)</label>
+                    <label>Ingresa la masa de muestra de café (M) (250 o 300 Gramos)</label>
                     <input type="number" id="masaCafe" class="form-control">
 
                 </div>
                 <div class="form-group">
-                    <label>Ingresa la masa de la trilla (T)</label>
+                    <label>Ingresa la masa de la trilla (Gramos)</label>
                     <input type="number" id="masaTrilla" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label>Ingresa la masa de pasilla bajo de la malla 13 (P)</label>
+                    <label>Ingresa la masa de pasilla bajo de la malla 13 (Gramos)</label>
                     <input type="number" id="masaPasilla" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label>Ingresa la masa de los defectos hallados (D)</label>
+                    <label>Ingresa la masa de los defectos hallados (Gramos)</label>
                     <input type="number" id="masaDefectos" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label>Ingresa el precio base (PB)</label>
+                    <label>Ingresa el precio base (Pesos)</label>
                     <input type="number" id="precioBase" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label>Ingresa la cantidad de cantidad de cargas de café</label>
+                    <label>Ingresa la cantidad de cargas de café</label>
                     <input type="number" id="cantidadCafe" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label>Factor de rendimiento</label>
+                    <label>Factor de rendimiento(%) </label>
                     <input type="number" id="factorRendimiento" class="form-control" readonly> 
+                </div>
+                <div class="form-group">
+                    <label>Posible liquidación (Pesos) </label>
+                    <input type="number" id="liquidacionFinal" class="form-control" readonly> 
                 </div>
         
         </div>
+       
         <div class="card-footer">
-            <a onclick="getFactorRendimiento()" class="btn btn-primary text-light">Factor de rendimiento</a>
+            <a onclick="getLiquidacionFinal()" class="btn btn-primary text-light">Calcular</a>
         </div>
         
     </div>
@@ -80,24 +85,28 @@
     function getPreLiquidacion(){
         var factorRendimiento = getFactorRendimiento()
         var precioBase=$('#precioBase').val();
+        var preLiquidacion;
 
 
-        if (factorRendimiento > 94){
-             var preLiquidacion = Number(precioBase) -Number(precioBase) * (Number(factorRendimiento) - 94) / 100;
+        if (Number(factorRendimiento) > 94){
+             var preLiquidacion = Number(precioBase) -(Number(precioBase) * (Number(factorRendimiento) - 94) / 100);
              }
         
         else {
-             preLiquidacion = Number(precioBase) - Number(precioBase) * (94 - Number(factorRendimiento)) / 100;
+             var preLiquidacion = Number(precioBase) + (Number(precioBase) * (94 - Number(factorRendimiento)) / 100);
         }
-        $ ("#preLiquidacion").val()
+        $ ("#preLiquidacion").val(preLiquidacion);
+    return preLiquidacion;
     }
 
     function getLiquidacionFinal(){
-         preLiquidacion = getPreLiquidacion()
+         var factorRendimiento = getFactorRendimiento();
+         var preLiquidacion = getPreLiquidacion();
          var cantidadCafe=$('#cantidadCafe').val();
-         liquidacionFinal = Number(preLiquidacion) * Number(cantidadCafe)
-         $(liquidacionFinal).val()
-
+         var liquidacionFinal = Number(preLiquidacion) * Number(cantidadCafe);
+         var final = [factorRendimiento, liquidacionFinal];
+         $("#liquidacionFinal").val(liquidacionFinal);
+    return liquidacionFinal
     }
     
 

@@ -24,7 +24,7 @@ def drop_tables():
 @manager.command
 def add_data_tables():
     db.create_all()
-    categorias = ("Siembra", "Capachos", "Trilladoras")
+    categorias = ("Producción", "Consumo", "Trilladoras", "Secado y tostión")
     for cat in categorias:
         categoria = Titulos(nombre=cat)
         db.session.add(categoria)

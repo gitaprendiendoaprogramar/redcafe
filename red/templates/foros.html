@@ -1,8 +1,8 @@
-{% extends "base.html" %} {% block title %}Todo del Café{% endblock %} {% block body %}
+{% extends "base.html" %} {% block title %}Red del café{% endblock %} {% block body %}
 <div class="container">
     <div class="row">
         <div class="col-md-2">
-            <h4>Categorias...</h4>
+            <h4>Categorías</h4>
             <div class="list-group">
                 {% for tit in titulos %} {% if titulo.nombre==tit.nombre%}
                 <a class="list-group-item active" href="{{url_for("foros",id=tit.id)}}">{{tit.nombre}}</a> {% else %}
