@@ -21,45 +21,52 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
-@app.route('/')
+@app.route('/') # tienen la funcionalidad de enrutar las platillas 
 def inicio():
     return render_template("inicio.html")
 
 @app.route('/foros')
 @app.route('/foros/<id>')
 def foros(id='0'):
-    from red.models import Foros, Titulos
-    titulo = Titulos.query.get(id)
-    if id == '0':
-        foros = Foros.query.all()
-    else:
+    from red.models import Foros, Titulos # importacion de modelos 
+    ####### la siguiente parte de codigo se controla el accesso a la plantilla de foros......
+    titulo = Titulos.query.get(id) # creo una variable con el id de la persona, si esta registrada
+    if id == '0': # si es cero muestre todos 
+        foros = Foros.query.all() 
+    else: # si no es cero muestreme segun el id...  cada categoria tiene un id 
         foros = Foros.query.filter_by(TituloId=id)
     titulos = Titulos.query.all()
     print(foros)
     return render_template("foros.html", foros=foros, titulos=titulos, titulo=titulo)
 
 @app.route('/categorias')
-def categorias():
-    from red.models import Titulos
-    categorias = Titulos.query.all()
-    return render_template("categorias.html", categorias=categorias)
+def categorias(): # se enruta las categorias, (se llama la tablita de las categorias, siembra, capacho.... trilladoras)
+    from red.models import Titulos # importo el modelo, es decir la tabla... 
+    categorias = Titulos.query.all() ## llamo todos los titulos 
+    return render_template("categorias.html", categorias=categorias) # retorno la plantilla con los titulos
 
+
+### enrrutamiento para crear un nuevo foro
+######## TRABAJANDO CON FORMULARIOS "https://plataforma.josedomingo.org/pledin/cursos/flask/curso/u19/"
 @app.route('/categorias/new', methods=["get", "post"])
 @login_required
 def categorias_new():
     from red.models import Titulos
-    # Control de permisos
-    if not current_user.is_admin():
+    # Control de permisos, condiciono; si la persona es abministrador se le deja agragar un categoria de lo contrario no 
+    if not current_user.is_admin(): # si no es admin le retorna un error 
         abort(404)
-    form = FormTitulo(request.form)
-    if form.validate_on_submit():
+    form = FormTitulo(request.form) # se crea un objeto
+    if form.validate_on_submit(): #  Nos permite comprobar si el formulario ha sido enviado y es válido.
         tit = Titulos(nombre=form.nombre.data)
-        db.session.add(tit)
-        db.session.commit()
+        db.session.add(tit) # agrego la nueva categoria a la base de datos
+        db.session.commit() ## le hago el commit.. el comi es como la ultima palabra..le doy siii ya.... 
         return redirect(url_for("categorias"))
     else:
         return render_template("categorias_new.html", form=form)
 
+
+# enrrutamiento de la ediccion de categorias... se trabaja con la misma logica que el anterior , con control de permisos
+## 
 @app.route('/categorias/<id>/edit', methods=["get", "post"])
 @login_required
 def categorias_edit(id):
@@ -67,16 +74,21 @@ def categorias_edit(id):
     # Control de permisos
     if not current_user.is_admin():
         abort(404)
-    tit = Titulos.query.get(id)
+    tit = Titulos.query.get(id) # se hace una consulta "https://flask-sqlalchemy.palletsprojects.com/en/2.x/queries/"
     if tit is None:
         abort(404)
-    form = FormTitulo(request.form, obj=tit)
+    form = FormTitulo(request.form, obj=tit) # se cra un objecto dadole como argumetos los titulos
     if form.validate_on_submit():
-        form.populate_obj(tit)
+        form.populate_obj(tit) # Rellena los atributos del obj pasado con datos de los campos del formulario. "https://wtforms.readthedocs.io/en/2.3.x/forms/"
         db.session.commit()
         return redirect(url_for("categorias"))
     return render_template("categorias_new.html", form=form)
 
+### enrrutamiento y control de permisos para eliminar una categoria, se hace con la misma logica....
+
+## Nota sobre get; y post La diferencia entre estos dos parámetros es que GET, envía la información haciéndola visible en la URL de la 
+# pagina web.
+#  Mientras que POST, envía la información ocultándola del usuario.
 @app.route('/categorias/<id>/delete', methods=["get", "post"])
 @login_required
 def categorias_delete(id):
@@ -105,22 +117,24 @@ def foros_new():
     form = FormForo()
     titulos = [(c.id, c.nombre) for c in Titulos.query.all()[1:]]
     form.TituloId.choices = titulos
-    form.UsuarioId.data = current_user.id
-    form.created_at.data = datetime.now()
-    if form.validate_on_submit():
+    form.UsuarioId.data = current_user.id # accede al al id del usuario 
+    form.created_at.data = datetime.now() # pone la fecha 
+    if form.validate_on_submit(): # comprueba si el formulario ha sido enviando y es valido.. 
         frs = Foros()
-        form.populate_obj(frs)
-        db.session.add(frs)
-        db.session.commit()
+        form.populate_obj(frs) # rellena los atrubutos del objeto.
+        db.session.add(frs) # agrega el formulario 
+        db.session.commit() # da la orden de guradar 
         return redirect(url_for("foros"))
     else:
         return render_template("foros_new.html", form=form, accion='add')
 
+
+# enrrutamiento para edicion de foro
 @app.route('/foros/<id>/edit', methods=["get", "post"])
 @login_required
 def foros_edit(id):
     from red.models import Foros, Titulos
-     #Control de permisos no
+     #Control de permisos para la edicion del foro, se trabaja con la m isma logica anterior, de control de permisos.
     #if not current_user.is_admin():
     #    abort(404)
     frs = Foros.query.get(id)
@@ -135,11 +149,13 @@ def foros_edit(id):
         return redirect(url_for("foros"))
     return render_template("foros_new.html", form=form, accion='edt')
 
+
+## enrrutamiento de la plantilla de eliminacion de foros.. funciona con la misma logica de categorias
 @app.route('/foros/<id>/delete', methods=["get", "post"])
 @login_required
 def foros_delete(id):
     from red.models import Foros
-     #Control de permisos
+     #Control de permisos para eliminacion de foros 
     #if not current_user.is_admin():
     #   abort(404)
     frs = Foros.query.get(id)
@@ -163,6 +179,8 @@ def blogs():
     blogs = Blogs.query.all()
     print(blogs)
     return render_template("blogs.html", blogs=blogs)
+## NOTA: LA LOGICA DE LOS BLOGS ES LA MISMA DE LOS FOROS, CREACION DE TABLAS Y ABMINITRACION DE ELLAS 
+
 
 @app.route('/blogs/<id>/view', methods=["get", "post"])
 # @login_required
@@ -289,11 +307,11 @@ def Foro():
 def login():
     from red.models import Usuarios
     # Control de permisos
-    if current_user.is_authenticated:
+    if current_user.is_authenticated: # se verifica si esta autenticado el ususario, si lo esta se le da acceso a inicio
         return redirect(url_for("inicio"))
     form = LoginForm()
     if form.validate_on_submit():
-        user = Usuarios.query.filter_by(username=form.username.data).first()
+        user = Usuarios.query.filter_by(username=form.username.data).first() # estoy haciendo un filtrado de lam base, lo guardo en user
         if user is not None and user.verify_password(form.password.data):
             login_user(user)
             next = request.args.get('next')
